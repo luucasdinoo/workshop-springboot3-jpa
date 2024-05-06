@@ -3,13 +3,15 @@ package com.luucasdinoo.course.entities;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "tb_user")
 public class User implements Serializable {
-
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,6 +19,8 @@ public class User implements Serializable {
     private String email;
     private String phone;
     private String passwork;
+    @OneToMany(mappedBy = "client")
+    private List<Order> orders = new ArrayList<>();
 
     public User(){}
 
@@ -66,6 +70,10 @@ public class User implements Serializable {
 
     public void setPasswork(String passwork) {
         this.passwork = passwork;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
     }
 
     @Override
