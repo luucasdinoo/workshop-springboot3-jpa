@@ -2,8 +2,11 @@ package com.luucasdinoo.course.services;
 
 import com.luucasdinoo.course.entities.User;
 import com.luucasdinoo.course.repositories.UserRepository;
-import com.luucasdinoo.course.services.exceptions.ResourceNotFountException;
+import com.luucasdinoo.course.services.exceptions.DataBaseExceptions;
+import com.luucasdinoo.course.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +27,7 @@ public class UserService {
     public User findById(Long id){
         Optional<User> obj = repository.findById(id);
         //return obj.get();
-        return obj.orElseThrow(() -> new ResourceNotFountException(id));
+        return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     //POST
@@ -34,7 +37,16 @@ public class UserService {
 
     //DELETE
     public void delete(Long id){
-        repository.deleteById(id);
+
+        try {
+            repository.deleteById(id);
+        }
+        catch (EmptyResultDataAccessException e){
+            throw new ResourceNotFoundException(id);
+        }
+        catch (DataIntegrityViolationException e){
+            throw  new DataBaseExceptions(e.getMessage());
+        }
     }
 
     //PUT
