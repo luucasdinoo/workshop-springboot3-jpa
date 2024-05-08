@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> insert(@RequestBody User obj){
+    public ResponseEntity<User> insert(@RequestBody User obj){ // RequestBody -> Obj é lido e desserializado
         obj = service.insert(obj);
         //Código 201, especifico do http que siginifica que vc criou um novo recurso.
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(obj.getId()).toUri();
@@ -42,5 +42,11 @@ public class UserController {
         service.delete(id);
         //Código 204, retorna uma resposta vazia
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User obj){
+        obj = service.update(id, obj);
+        return ResponseEntity.ok().body(obj);
     }
 }
