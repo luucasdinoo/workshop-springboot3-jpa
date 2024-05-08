@@ -2,6 +2,7 @@ package com.luucasdinoo.course.services;
 
 import com.luucasdinoo.course.entities.User;
 import com.luucasdinoo.course.repositories.UserRepository;
+import com.luucasdinoo.course.services.exceptions.ResourceNotFountException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,8 @@ public class UserService {
     //GET
     public User findById(Long id){
         Optional<User> obj = repository.findById(id);
-        return obj.get();
+        //return obj.get();
+        return obj.orElseThrow(() -> new ResourceNotFountException(id));
     }
 
     //POST
@@ -35,6 +37,7 @@ public class UserService {
         repository.deleteById(id);
     }
 
+    //PUT
     public User update(Long id, User obj){
         User entity = repository.getReferenceById(id);
         updateData(entity, obj);
